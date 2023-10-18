@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -32,8 +33,8 @@ public class MenaceBotCM extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
-    private DcMotor armDrive = null;
-    armDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    private DcMotorEx armDrive = null;
+
     //private Servo leftservo = null;
     //private Servo rightservo = null;
 
@@ -47,7 +48,7 @@ public class MenaceBotCM extends LinearOpMode {
         // step (using the FTC Robot Controller app on the phone).
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-        armDrive = hardwareMap.get(DcMotor.class, "arm_drive");
+        armDrive = hardwareMap.get(DcMotorEx.class, "arm_drive");
         //leftservo = hardwareMap.get(Servo.class,"left_servo");
        // rightservo = hardwareMap.get(Servo.class, "right_servo");
 
@@ -56,14 +57,25 @@ public class MenaceBotCM extends LinearOpMode {
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
-        armDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
-
+        armDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            if(gamepad1.dpad_up){
+                armDrive.setTargetPosition(83);
+                armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                armDrive.setPower(0.5);
+            }
+            else if (gamepad1.dpad_down){
+                armDrive.setTargetPosition(0);
+                armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                armDrive.setPower(0.5);
+            }
+
+
 
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftPower;
@@ -82,12 +94,17 @@ public class MenaceBotCM extends LinearOpMode {
             double arm = gamepad1.right_stick_y;
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
-            armPower    = Range.clip(arm, -1.0, 1.0) ;
+
 
 
             // Send calculated power to wheels
             leftDrive.setPower(leftPower);
             rightDrive.setPower(rightPower);
+            if(gamepad1.a) {
+                armDrive.setTargetPosition(300);
+                armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                armDrive.setVelocity(200);
+            }
 
 
             //leftservo = Range.clip();
