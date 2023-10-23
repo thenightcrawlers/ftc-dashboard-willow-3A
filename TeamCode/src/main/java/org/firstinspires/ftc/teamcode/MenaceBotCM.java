@@ -26,6 +26,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 @TeleOp(name="MenaceBotCM")
+@Config
 //@Disabled
 public class MenaceBotCM extends LinearOpMode {
 
@@ -34,9 +35,12 @@ public class MenaceBotCM extends LinearOpMode {
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
     private DcMotorEx armDrive = null;
-
-    //private Servo leftservo = null;
-    //private Servo rightservo = null;
+    private Servo leftservo = null;
+    private Servo rightservo = null;
+    public static int right_claw_open = null;
+    public static int right_claw_close = null;
+    public static int left_claw_open = 50;
+    public static int left_claw_close = null;
 
     @Override
     public void runOpMode() {
@@ -49,8 +53,8 @@ public class MenaceBotCM extends LinearOpMode {
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         armDrive = hardwareMap.get(DcMotorEx.class, "arm_drive");
-        //leftservo = hardwareMap.get(Servo.class,"left_servo");
-       // rightservo = hardwareMap.get(Servo.class, "right_servo");
+        leftservo = hardwareMap.get(Servo.class,"left_servo");
+        rightservo = hardwareMap.get(Servo.class, "right_servo");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
@@ -65,12 +69,12 @@ public class MenaceBotCM extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             if(gamepad1.dpad_up){
-                armDrive.setTargetPosition(83);
+                armDrive.setTargetPosition(-650);
                 armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 armDrive.setPower(0.5);
             }
             else if (gamepad1.dpad_down){
-                armDrive.setTargetPosition(0);
+                armDrive.setTargetPosition(10);
                 armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 armDrive.setPower(0.5);
             }
@@ -104,6 +108,14 @@ public class MenaceBotCM extends LinearOpMode {
                 armDrive.setTargetPosition(300);
                 armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 armDrive.setVelocity(200);
+            }
+            if(gamepad1.dpad_left){
+                leftservo.setPosition(left_claw_open);
+                rightservo.setPosition(right_claw_open);
+            }
+            if(gamepad1.dpad_right){
+                leftservo.setPosition(left_claw_close);
+                rightservo.setPosition(right_claw_close);
             }
 
 
