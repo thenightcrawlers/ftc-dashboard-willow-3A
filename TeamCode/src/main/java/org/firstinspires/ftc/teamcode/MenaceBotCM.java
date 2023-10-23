@@ -37,10 +37,10 @@ public class MenaceBotCM extends LinearOpMode {
     private DcMotorEx armDrive = null;
     private Servo leftservo = null;
     private Servo rightservo = null;
-    public static int right_claw_open = null;
-    public static int right_claw_close = null;
-    public static int left_claw_open = 50;
-    public static int left_claw_close = null;
+    public static int right_claw_open = 70;
+    public static int right_claw_close = -40;
+    public static int left_claw_open = -70;
+    public static int left_claw_close = 40;
 
     @Override
     public void runOpMode() {
@@ -74,7 +74,7 @@ public class MenaceBotCM extends LinearOpMode {
                 armDrive.setPower(0.5);
             }
             else if (gamepad1.dpad_down){
-                armDrive.setTargetPosition(10);
+                armDrive.setTargetPosition(-105);
                 armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 armDrive.setPower(0.5);
             }
@@ -84,9 +84,7 @@ public class MenaceBotCM extends LinearOpMode {
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftPower;
             double rightPower;
-            double armPower;
-            //double leftservo;
-            //boolean closeservo = gamepad1.a;
+
 
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
@@ -95,7 +93,6 @@ public class MenaceBotCM extends LinearOpMode {
             // - This uses basic math to combine motions and is easier to drive straight.
             double drive = -gamepad1.left_stick_y;
             double turn  =  gamepad1.left_stick_x;
-            double arm = gamepad1.right_stick_y;
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 
@@ -109,11 +106,11 @@ public class MenaceBotCM extends LinearOpMode {
                 armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 armDrive.setVelocity(200);
             }
-            if(gamepad1.dpad_left){
+            if(gamepad1.left_bumper){
                 leftservo.setPosition(left_claw_open);
                 rightservo.setPosition(right_claw_open);
             }
-            if(gamepad1.dpad_right){
+            if(gamepad1.right_bumper){
                 leftservo.setPosition(left_claw_close);
                 rightservo.setPosition(right_claw_close);
             }
