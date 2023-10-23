@@ -1,8 +1,39 @@
+///
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -24,7 +55,6 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-
 @TeleOp(name="MenaceBotCM")
 @Config
 //@Disabled
@@ -41,6 +71,8 @@ public class MenaceBotCM extends LinearOpMode {
     public static int right_claw_close = -40;
     public static int left_claw_open = -70;
     public static int left_claw_close = 40;
+    //
+    //
 
     @Override
     public void runOpMode() {
@@ -56,6 +88,8 @@ public class MenaceBotCM extends LinearOpMode {
         leftservo = hardwareMap.get(Servo.class,"left_servo");
         rightservo = hardwareMap.get(Servo.class, "right_servo");
 
+FtcDashboard dashboard= FtcDashboard.getInstance();
+telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
@@ -71,12 +105,12 @@ public class MenaceBotCM extends LinearOpMode {
             if(gamepad1.dpad_up){
                 armDrive.setTargetPosition(-650);
                 armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armDrive.setPower(0.5);
+                armDrive.setVelocity(200);
             }
             else if (gamepad1.dpad_down){
-                armDrive.setTargetPosition(-105);
+                armDrive.setTargetPosition(-100);
                 armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armDrive.setPower(0.5);
+                armDrive.setVelocity(200);
             }
 
 
@@ -101,11 +135,7 @@ public class MenaceBotCM extends LinearOpMode {
             // Send calculated power to wheels
             leftDrive.setPower(leftPower);
             rightDrive.setPower(rightPower);
-            if(gamepad1.a) {
-                armDrive.setTargetPosition(300);
-                armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armDrive.setVelocity(200);
-            }
+
             if(gamepad1.left_bumper){
                 leftservo.setPosition(left_claw_open);
                 rightservo.setPosition(right_claw_open);
@@ -116,11 +146,11 @@ public class MenaceBotCM extends LinearOpMode {
             }
 
 
-            //leftservo = Range.clip();
 
-            // Show the elapsed game time and wheel power
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.addData("Status", "Waiting for the motor to reach its target");
+            telemetry.addData("Arm Position", armDrive.getCurrentPosition());
             telemetry.update();
         }
     }
