@@ -84,7 +84,7 @@ public class MenaceBotCM extends LinearOpMode {
         // step (using the FTC Robot Controller app on the phone).
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-        armDrive = hardwareMap.get(DcMotorEx.class, "arm_drive");
+        armDrive = hardwareMap.get(DcMotorEx.class, "arm_motor");
         leftservo = hardwareMap.get(Servo.class,"left_servo");
         rightservo = hardwareMap.get(Servo.class, "right_servo");
 
@@ -107,12 +107,26 @@ telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
                 armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 armDrive.setVelocity(200);
             }
-            else if (gamepad1.dpad_down){
+            if (gamepad1.dpad_down) {
                 armDrive.setTargetPosition(-100);
                 armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 armDrive.setVelocity(200);
             }
 
+            if(gamepad1.b){
+                    int position = armDrive.getCurrentPosition();
+                    int newPosition = position - 10;
+                    armDrive.setTargetPosition(newPosition);
+                    armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    armDrive.setPower(0.5);
+                }
+            if(gamepad1.x){
+                int position = armDrive.getCurrentPosition();
+                int newPosition = position + 10;
+                armDrive.setTargetPosition(newPosition);
+                armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                armDrive.setPower(0.5);
+            }
 
 
             // Setup a variable for each drive wheel to save power level for telemetry
