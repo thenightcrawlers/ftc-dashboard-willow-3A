@@ -35,9 +35,11 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -71,6 +73,8 @@ public class MenaceBotCM extends LinearOpMode {
     public static int right_claw_close = -40;
     public static int left_claw_open = -70;
     public static int left_claw_close = 40;
+    private ColorSensor colorSensor = null;
+    private DistanceSensor distanceSensor = null;
     //
     //
 
@@ -87,6 +91,8 @@ public class MenaceBotCM extends LinearOpMode {
         armDrive = hardwareMap.get(DcMotorEx.class, "arm_motor");
         leftservo = hardwareMap.get(Servo.class,"left_servo");
         rightservo = hardwareMap.get(Servo.class, "right_servo");
+        colorSensor = hardwareMap.get(ColorSensor.class, "color_sensor");
+        distanceSensor = hardwareMap.get(DistanceSensor.class, "distance_sensor");
 
 FtcDashboard dashboard= FtcDashboard.getInstance();
 telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
@@ -139,8 +145,8 @@ telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = -gamepad1.left_stick_y;
-            double turn  =  gamepad1.left_stick_x;
+            double turn = -gamepad1.right_stick_x;
+            double drive  =  -gamepad1.left_stick_x;
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 
