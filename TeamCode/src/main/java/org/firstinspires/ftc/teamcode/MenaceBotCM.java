@@ -75,6 +75,7 @@ public class MenaceBotCM extends LinearOpMode {
     public static int left_claw_close = 40;
     private ColorSensor colorSensor = null;
     private DistanceSensor distanceSensor = null;
+    public static double speed = 0.6;
     //
     //
 
@@ -139,22 +140,27 @@ telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
             double leftPower;
             double rightPower;
 
-
-            // Choose to drive using either Tank Mode, or POV Mode
-            // Comment out the method that's not used.  The default below is POV.
-
-            // POV Mode uses left stick to go forward, and right stick to turn.
-            // - This uses basic math to combine motions and is easier to drive straight.
             double turn = -gamepad1.right_stick_x;
             double drive  =  -gamepad1.left_stick_x;
-            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+            leftPower    = Range.clip(drive + turn, -speed, speed) ;
+            rightPower   = Range.clip(drive - turn, -speed, speed) ;
 
-
-
-            // Send calculated power to wheels
+            if(gamepad1.right_stick_button){
+                if (speed < 1){
+                    speed = speed + 0.2;
+                }
+            }
+            if(gamepad1.left_stick_button){
+                if (speed > .2) {
+                    speed = speed - 0.2;
+                }
+            }
             leftDrive.setPower(leftPower);
             rightDrive.setPower(rightPower);
+
+
+
+
 
             if(gamepad1.left_bumper){
                 leftservo.setPosition(left_claw_open);
