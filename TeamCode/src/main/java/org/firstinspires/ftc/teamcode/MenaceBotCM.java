@@ -44,6 +44,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -74,7 +76,7 @@ public class MenaceBotCM extends LinearOpMode {
     public static int left_claw_open = -70;
     public static int left_claw_close = 40;
     private ColorSensor colorSensor = null;
-    private DistanceSensor distanceSensor = null;
+    private DistanceSensor distanceSensor;
     public static double speed = 0.6;
     //
     //
@@ -157,6 +159,12 @@ telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
             }
             leftDrive.setPower(leftPower);
             rightDrive.setPower(rightPower);
+            if(gamepad1.y){
+                if(distanceSensor.getDistance(DistanceUnit.INCH)<1){
+                    rightservo.setPosition(right_claw_close);
+                    leftservo.setPosition(left_claw_close);
+                }
+            }
 
 
 
